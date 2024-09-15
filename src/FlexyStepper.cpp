@@ -850,9 +850,14 @@ void FlexyStepper::setTargetPositionToStop()
   //
   // move the target position so that the motor will begin deceleration now
   //
-  decelerationDistance_InSteps = (long) round(
-    5E11 / (acceleration_InStepsPerSecondPerSecond * currentStepPeriod_InUS * 
-    currentStepPeriod_InUS));
+  if(currentStepPeriod_InUS != 0) {
+    decelerationDistance_InSteps = (long) round(
+      5E11 / (acceleration_InStepsPerSecondPerSecond * currentStepPeriod_InUS * 
+      currentStepPeriod_InUS));
+  }
+  else {
+    decelerationDistance_InSteps = 0;
+  }
 
   if (directionOfMotion > 0)
     setTargetPositionInSteps(currentPosition_InSteps + decelerationDistance_InSteps);
@@ -1063,9 +1068,13 @@ void FlexyStepper::DeterminePeriodOfNextStep()
   // velocity of 0, Steps = Velocity^2 / (2 * Acceleration)
   //
   currentStepPeriodSquared = currentStepPeriod_InUS * currentStepPeriod_InUS;
-  decelerationDistance_InSteps = (long) round(
-    5E11 / (acceleration_InStepsPerSecondPerSecond * currentStepPeriodSquared));
-  
+  if(currentStepPeriodSquared != 0) {
+    decelerationDistance_InSteps = (long) round(
+      5E11 / (acceleration_InStepsPerSecondPerSecond * currentStepPeriodSquared));
+  }
+  else {
+    decelerationDistance_InSteps = 0;
+  }
   
   //
   // check if: Moving in a positive direction & Moving toward the target
